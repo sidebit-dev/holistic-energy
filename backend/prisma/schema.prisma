@@ -5,7 +5,116 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// Criar uma migration: yarn prisma migrate dev
+model User {
+  id String @id @default(uuid())
+  name String
+  email String @unique
+  password String
+  active Boolean? @default(true)
+  role Role @default(USER)
+  typeUser TypeUser @default(CLIENT)
+  schedule Schedule[]
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+  client Client[]
+  therapist Therapist[]
+
+  @@map("users")
+}
+
+enum Role {
+  USER 
+  ADMIN
+
+  @@map("roles")
+}
+
+enum TypeUser {
+  CLIENT
+  THERAPIST
+
+  @@map("typeusers")
+}
+
+model Client {
+  id String @id @default(uuid())
+  birthday DateTime?
+  user_id String @unique
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+  user User @relation(fields: [user_id], references: [id])
+  
+  @@map("clients")
+}
+
+model Therapist {
+  id String @id @default(uuid())
+  user_id String @unique
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+  pistxpy PistxPy[]
+  schedule Schedule[]
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("therapists")
+}
+
+model Therapy {
+  id String @id @default(uuid())
+  name String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+  pistxpy PistxPy[]
+  schedule Schedule[]
+
+  @@map("therapies")  
+}
+
+model PistxPy {
+  id String @id @default(uuid())
+  therapy Therapy @relation(fields: [therapy_id], references: [id])
+  therapist Therapist @relation(fields: [therapist_id],references: [id])
+  therapy_id String
+  therapist_id String
+
+  @@map("pistsxpies")
+}
+
+model Hour {
+  id String @id @default(uuid())
+  hour String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+  schedule Schedule[]
+
+  @@map("hours")
+}
+
+model Schedule {
+  id String @id @default(uuid())
+  scheduledDate DateTime?
+  therapy_id String
+  thepapist_id String
+  scheduledTime DateTime
+  hour_id String
+  user_id String
+  comment String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now()) 
+  hour Hour @relation(fields: [hour_id], references: [id]) 
+  user User @relation(fields: [user_id], references: [id])
+  therapy Therapy @relation(fields: [therapy_id], references: [id])
+  therapist Therapist @relation(fields: [thepapist_id], references: [id])  
+
+  @@map("schedules")
 }
