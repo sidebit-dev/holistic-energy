@@ -21,29 +21,23 @@ model User {
   email String @unique
   password String
   active Boolean? @default(true)
-  role Role @default(USER)
-  typeUser TypeUser @default(CLIENT)
+  role Role @default(CLIENT)
   schedule Schedule[]
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
   client Client[]
   therapist Therapist[]
+  admin Admin[]
 
   @@map("users")
 }
 
 enum Role {
-  USER 
+  CLIENT
+  THERAPIST
   ADMIN
 
   @@map("roles")
-}
-
-enum TypeUser {
-  CLIENT
-  THERAPIST
-
-  @@map("typeusers")
 }
 
 model Client {
@@ -55,6 +49,15 @@ model Client {
   user User @relation(fields: [user_id], references: [id])
   
   @@map("clients")
+}
+
+model Admin {
+  id String @id @default(uuid())
+  user_id String @unique
+  typeAdmin String @default("Recepção")
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("admins")
 }
 
 model Therapist {
