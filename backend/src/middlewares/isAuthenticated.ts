@@ -5,6 +5,8 @@ interface PayLoad{
     sub: string;
 }
 
+// USADO PARA TODAS AS ROTAS QUE O USUARIO ESTEJA LOGADO
+
 export function isAuthenticated(
     req: Request,
     res: Response,
@@ -28,6 +30,11 @@ export function isAuthenticated(
         ) as PayLoad
 
        // console.log(sub); // Agora é deixar proceguir
+
+       // PODEMOS CRIAR UMA VARIAVEL user_id PARA TODOS QUE ACESSAREM
+       // Recuperar o id do token e colocar dentro de uma variável user_id dentro do req.
+       req.user_id = sub;
+
        return next();
 
     } catch (err) {
