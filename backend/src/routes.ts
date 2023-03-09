@@ -7,6 +7,7 @@ import { DetailUserController } from "./controllers/user/DetailUserController";
 import { CreateTherapyController } from "./controllers/therapy/CreateTherapyController";
 
 import { isAuthenticated } from "./middlewares/isAuthenticated";
+import { ListTherapyController } from "./controllers/therapy/ListTherapyController";
 
 
 
@@ -19,6 +20,7 @@ router.post('/session', new AuthUserController().handle)
 router.get('/me', isAuthenticated, new DetailUserController().handle)
 
 // Rotas Therapy --
-router.post('/therapies', isAuthenticated, new CreateTherapyController().handle)
+router.post('/therapy', isAuthenticated, new CreateTherapyController().handle)
+router.get('/therapy', new ListTherapyController().handle)
 
 export { router }
