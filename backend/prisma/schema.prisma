@@ -65,7 +65,7 @@ model Therapist {
   user_id String @unique
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
-  pistxpy PistxPy[]
+  therapy TherapistOnTherapy[]
   schedule Schedule[]
   user User @relation(fields: [user_id], references: [id])
 
@@ -77,20 +77,22 @@ model Therapy {
   name String
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
-  pistxpy PistxPy[]
+  therapist TherapistOnTherapy[]
   schedule Schedule[]
 
   @@map("therapies")  
 }
 
-model PistxPy {
-  id String @id @default(uuid())
+model TherapistOnTherapy {
   therapy Therapy @relation(fields: [therapy_id], references: [id])
   therapist Therapist @relation(fields: [therapist_id],references: [id])
   therapy_id String
   therapist_id String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+  @@id([therapy_id, therapist_id])
 
-  @@map("pistsxpies")
+  @@map("therapistsOnTherapies")
 }
 
 model Hour {
