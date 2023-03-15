@@ -9,6 +9,7 @@ import { CreateTherapyController } from "./controllers/therapy/CreateTherapyCont
 import { isAuthenticated } from "./middlewares/isAuthenticated";
 import { ListTherapyController } from "./controllers/therapy/ListTherapyController";
 import { CreateTherapistController } from "./controllers/therapist/CreateTherapistController";
+import { CreateAdminController } from "./controllers/admin/CreateAdminController";
 
 
 
@@ -20,11 +21,14 @@ router.post('/session', new AuthUserController().handle)
 // router.get('/me', new DetailUserController().handle)
 router.get('/me', isAuthenticated, new DetailUserController().handle)
 
-// Rotas Therapy --
+// -- Rotas Therapy --
 router.post('/therapy', isAuthenticated, new CreateTherapyController().handle)
 router.get('/therapy', new ListTherapyController().handle)
 
-// Rotas Therapist --
+// -- Rotas Therapist --
 router.post('/therapist', isAuthenticated, new CreateTherapistController().handle)
+
+// -- Rotas Admin --
+router.post('/admin', isAuthenticated, new CreateAdminController().handle)
 
 export { router }
