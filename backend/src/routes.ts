@@ -8,6 +8,7 @@ import { CreateTherapyController } from "./controllers/therapy/CreateTherapyCont
 
 import { isAuthenticated } from "./middlewares/isAuthenticated";
 import { ListTherapyController } from "./controllers/therapy/ListTherapyController";
+import { CreateTherapistController } from "./controllers/therapist/CreateTherapistController";
 
 
 
@@ -22,5 +23,8 @@ router.get('/me', isAuthenticated, new DetailUserController().handle)
 // Rotas Therapy --
 router.post('/therapy', isAuthenticated, new CreateTherapyController().handle)
 router.get('/therapy', new ListTherapyController().handle)
+
+// Rotas Therapist --
+router.post('/therapist', isAuthenticated, new CreateTherapistController().handle)
 
 export { router }

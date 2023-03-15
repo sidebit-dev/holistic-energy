@@ -16,18 +16,18 @@ datasource db {
 
 // Criar uma migration: yarn prisma migrate dev
 model User {
-  id String @id @default(uuid())
-  name String
-  email String @unique
-  password String
-  active Boolean? @default(true)
-  role Role @default(CLIENT)
-  schedule Schedule[]
-  created_at DateTime? @default(now())
-  updated_at DateTime? @default(now())
-  client Client[]
-  therapist Therapist[]
-  admin Admin[]
+  id         String      @id @default(uuid())
+  name       String
+  email      String      @unique
+  password   String
+  active     Boolean?    @default(true)
+  role       Role        @default(CLIENT)
+  schedule   Schedule[]
+  created_at DateTime?   @default(now())
+  updated_at DateTime?   @default(now())
+  client     Client[]
+  therapist  Therapist[]
+  admin      Admin[]
 
   @@map("users")
 }
@@ -41,85 +41,86 @@ enum Role {
 }
 
 model Client {
-  id String @id @default(uuid())
-  birthday DateTime?
-  user_id String @unique
+  id         String    @id @default(uuid())
+  birthday   DateTime?
+  user_id    String
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
-  user User @relation(fields: [user_id], references: [id])
-  
+  user       User      @relation(fields: [user_id], references: [id])
+
   @@map("clients")
 }
 
 model Admin {
-  id String @id @default(uuid())
-  user_id String @unique
+  id        String @id @default(uuid())
   typeAdmin String @default("Recepção")
-  user User @relation(fields: [user_id], references: [id])
+  user      User   @relation(fields: [user_id], references: [id])
+  user_id   String
 
   @@map("admins")
 }
 
 model Therapist {
-  id String @id @default(uuid())
-  user_id String @unique
-  created_at DateTime? @default(now())
-  updated_at DateTime? @default(now())
-  therapy TherapistOnTherapy[]
-  schedule Schedule[]
-  user User @relation(fields: [user_id], references: [id])
+  id         String               @id @default(uuid())
+  created_at DateTime?            @default(now())
+  updated_at DateTime?            @default(now())
+  therapy    TherapistOnTherapy[]
+  schedule   Schedule[]
+  user       User                 @relation(fields: [user_id], references: [id])
+  user_id String
 
   @@map("therapists")
 }
 
 model Therapy {
-  id String @id @default(uuid())
-  name String
-  created_at DateTime? @default(now())
-  updated_at DateTime? @default(now())
-  therapist TherapistOnTherapy[]
+  id         String               @id @default(uuid())
+  name       String
+  description String?
+  created_at DateTime?            @default(now())
+  updated_at DateTime?            @default(now())
+  therapist  TherapistOnTherapy[]
   schedule Schedule[]
 
-  @@map("therapies")  
+  @@map("therapies")
 }
 
 model TherapistOnTherapy {
-  therapy Therapy @relation(fields: [therapy_id], references: [id])
-  therapist Therapist @relation(fields: [therapist_id],references: [id])
-  therapy_id String
-  therapist_id String
-  created_at DateTime? @default(now())
-  updated_at DateTime? @default(now())
-  @@id([therapy_id, therapist_id])
 
-  @@map("therapistsOnTherapies")
+  therapist    Therapist @relation(fields: [therapist_id], references: [id])
+  therapy      Therapy   @relation(fields: [therapy_id], references: [id])
+  therapist_id String
+  therapy_id   String
+
+  @@id([therapist_id, therapy_id])
+
+  @@map("therapist_therapy")
 }
 
 model Hour {
-  id String @id @default(uuid())
-  hour String
-  created_at DateTime? @default(now())
-  updated_at DateTime? @default(now())
-  schedule Schedule[]
+  id         String     @id @default(uuid())
+  hour       String
+  created_at DateTime?  @default(now())
+  updated_at DateTime?  @default(now())
+  schedule   Schedule[]
 
   @@map("hours")
 }
 
 model Schedule {
-  id String @id @default(uuid())
+  id            String    @id @default(uuid())
   scheduledDate DateTime?
-  therapy_id String
-  thepapist_id String
+  therapy_id    String
+  thepapist_id  String
   scheduledTime DateTime
-  hour_id String
-  user_id String
-  comment String
-  created_at DateTime? @default(now())
-  updated_at DateTime? @default(now()) 
-  hour Hour @relation(fields: [hour_id], references: [id]) 
-  user User @relation(fields: [user_id], references: [id])
-  therapy Therapy @relation(fields: [therapy_id], references: [id])
-  therapist Therapist @relation(fields: [thepapist_id], references: [id])  
+  hour_id       String
+  user_id       String
+  comment       String
+  created_at    DateTime? @default(now())
+  updated_at    DateTime? @default(now())
+  hour          Hour      @relation(fields: [hour_id], references: [id])
+  user          User      @relation(fields: [user_id], references: [id])
+  therapy       Therapy   @relation(fields: [therapy_id], references: [id])
+  therapist     Therapist @relation(fields: [thepapist_id], references: [id])
 
   @@map("schedules")
 }
