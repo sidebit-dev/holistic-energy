@@ -10,6 +10,7 @@ import { isAuthenticated } from "./middlewares/isAuthenticated";
 import { ListTherapyController } from "./controllers/therapy/ListTherapyController";
 import { CreateTherapistController } from "./controllers/therapist/CreateTherapistController";
 import { CreateAdminController } from "./controllers/admin/CreateAdminController";
+import { AttachTherapyController } from "./controllers/therapist/AttachTherapyController";
 
 
 
@@ -27,6 +28,7 @@ router.get('/therapy', new ListTherapyController().handle)
 
 // -- Rotas Therapist --
 router.post('/therapist', isAuthenticated, new CreateTherapistController().handle)
+router.post('/therapist/add/therapy', isAuthenticated, new AttachTherapyController().handle)
 
 // -- Rotas Admin --
 router.post('/admin', isAuthenticated, new CreateAdminController().handle)
