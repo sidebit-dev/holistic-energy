@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client';
+import { Client, Role } from '@prisma/client';
 import prismaClient from '../../prisma';
 import { hash } from 'bcryptjs';
 
@@ -7,6 +7,11 @@ interface UserRequest{
     email: string;
     password: string;
     role: Role;
+}
+
+interface ClientRequest{
+    user_id: string;
+    birthday: Date;
 }
 
 class CreateUserService{
@@ -44,8 +49,30 @@ class CreateUserService{
                 role: true,
             }
         })
+
+        const clientAlreadyExists = await prismaClient.client.findFirst({
+            where:{
+                user_id: user.id              
+            },
+            select:{
+                birthday: true
+            }
+        })
+
+        let client
+
+        if(!clientAlreadyExists){
+            client = await prismaClient.client.create({
+               data:{
+                user_id: user.id
+               },
+               select:{
+                id: true
+               }
+            })
+        }
   
-        return user;
+        return [user, client];
     }
 }
 
