@@ -3,13 +3,13 @@ import prismaClient from "../../prisma";
 
 interface AttachRequest {
     user_id: string;
-    user_therapist: string;
+    id_therapist: string;
     id_therapy: string;  
   }
 
 class AttachTherapyService{
 
-    async execute({user_id, user_therapist ,id_therapy}: AttachRequest){
+    async execute({user_id, id_therapist ,id_therapy}: AttachRequest){
 
         const user = await prismaClient.user.findFirst({
             where:{
@@ -28,7 +28,7 @@ class AttachTherapyService{
 
         const therapist = await prismaClient.therapist.findFirst({
             where:{
-                user_id: user_therapist
+                id: id_therapist
             },
             select:{
                 id: true

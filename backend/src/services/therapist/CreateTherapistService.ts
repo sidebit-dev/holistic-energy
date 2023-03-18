@@ -47,7 +47,7 @@ class CreateTherapistService {
 
     const therapist = await prismaClient.therapist.create({
         data:{
-            user_id: user.id
+            id: user.id
         },
         select:{
             id: true

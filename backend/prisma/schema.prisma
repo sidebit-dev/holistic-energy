@@ -25,9 +25,9 @@ model User {
   schedule   Schedule[]
   created_at DateTime?   @default(now())
   updated_at DateTime?   @default(now())
-  client     Client[]
-  therapist  Therapist[]
-  admin      Admin[]
+  client     Client?
+  therapist  Therapist?
+  admin      Admin?
 
   @@map("users")
 }
@@ -41,34 +41,40 @@ enum Role {
 }
 
 model Client {
-  id         String    @id @default(uuid())
+  id         String  @unique  
   birthday   DateTime?
-  user_id    String
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
-  user       User      @relation(fields: [user_id], references: [id])
+  user       User      @relation(fields: [id], references: [id])
 
+  @@id([id])
   @@map("clients")
 }
 
-model Admin {
-  id        String @id @default(uuid())
-  typeAdmin String @default("Recepção")
-  user      User   @relation(fields: [user_id], references: [id])
-  user_id   String
+enum TypeAdmin {
+  OPERACIONAL
+  FINANCEIRO
+  MASTER
+}
 
+model Admin {
+  id        String @unique
+  typeAdmin TypeAdmin  @default(OPERACIONAL)
+  user      User   @relation(fields: [id], references: [id])
+  
+  @@id([id])
   @@map("admins")
 }
 
 model Therapist {
-  id         String               @id @default(uuid())
+  id         String               @unique
   created_at DateTime?            @default(now())
   updated_at DateTime?            @default(now())
   therapy    TherapistOnTherapy[]
   schedule   Schedule[]
-  user       User                 @relation(fields: [user_id], references: [id])
-  user_id String
+  user       User                 @relation(fields: [id], references: [id])
 
+  @@id([id])
   @@map("therapists")
 }
 
