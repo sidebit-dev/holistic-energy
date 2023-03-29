@@ -114,10 +114,9 @@ model Hour {
 
 model Schedule {
   id            String    @id @default(uuid())
-  scheduledDate DateTime?
+  scheduleDate DateTime?
   therapy_id    String
   thepapist_id  String
-  scheduledTime DateTime
   hour_id       String
   user_id       String
   comment       String

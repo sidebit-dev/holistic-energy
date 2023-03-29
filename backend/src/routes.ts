@@ -11,6 +11,12 @@ import { ListTherapyController } from "./controllers/therapy/ListTherapyControll
 import { CreateTherapistController } from "./controllers/therapist/CreateTherapistController";
 import { CreateAdminController } from "./controllers/admin/CreateAdminController";
 import { AttachTherapyController } from "./controllers/therapist/AttachTherapyController";
+import { CreateScheduleController } from "./controllers/schedule/CreateScheduleController";
+import { CreateHourController } from "./controllers/hour/CreateHourController";
+import { ListHourController } from "./controllers/hour/ListHourController";
+import { ListScheduleController } from "./controllers/schedule/ListScheduleController";
+import { UpdateHourController } from "./controllers/hour/UpdateHourController";
+import { UpdateScheduleController } from "./controllers/schedule/UpdateScheduleController";
 
 
 
@@ -32,5 +38,15 @@ router.post('/therapist/add/therapy', isAuthenticated, new AttachTherapyControll
 
 // -- Rotas Admin --
 router.post('/admin', isAuthenticated, new CreateAdminController().handle)
+
+// --Rotas Hour --
+router.post('/add/hour', isAuthenticated, new CreateHourController().handle)
+router.get('/hour', isAuthenticated, new ListHourController().handle)
+router.put('/hour/up/:id', isAuthenticated, new UpdateHourController().handle)
+
+// -- Rotas Schedule --
+router.post('/schedule', isAuthenticated, new CreateScheduleController().handle)
+router.get('/schedule', isAuthenticated, new ListScheduleController().handle)
+router.put('/schedule/up/:id', isAuthenticated, new UpdateScheduleController().handle)
 
 export { router }
