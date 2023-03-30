@@ -17,6 +17,9 @@ import { ListHourController } from "./controllers/hour/ListHourController";
 import { ListScheduleController } from "./controllers/schedule/ListScheduleController";
 import { UpdateHourController } from "./controllers/hour/UpdateHourController";
 import { UpdateScheduleController } from "./controllers/schedule/UpdateScheduleController";
+import { FindHourIdController } from "./controllers/hour/FindHourIdController";
+import { DeleteHourController } from "./controllers/hour/DeleteHourController";
+import { AvailableHoursController } from "./controllers/hour/AvailableHoursController";
 
 
 
@@ -42,7 +45,11 @@ router.post('/admin', isAuthenticated, new CreateAdminController().handle)
 // --Rotas Hour --
 router.post('/add/hour', isAuthenticated, new CreateHourController().handle)
 router.get('/hour', isAuthenticated, new ListHourController().handle)
+router.get('/hour/available', isAuthenticated , new AvailableHoursController().handle)
 router.put('/hour/up/:id', isAuthenticated, new UpdateHourController().handle)
+router.get('/hour/:id', isAuthenticated, new FindHourIdController().handle)
+router.delete('/hour/:id', isAuthenticated, new DeleteHourController().handle)
+
 
 // -- Rotas Schedule --
 router.post('/schedule', isAuthenticated, new CreateScheduleController().handle)
