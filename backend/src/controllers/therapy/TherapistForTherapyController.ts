@@ -9,11 +9,11 @@ class TherapistForTherapyController{
 
         const therapistForTherapyService = new TherapistForTherapyService()
 
-        const hours = await therapistForTherapyService.execute({
+        const therapist = await therapistForTherapyService.execute({
             therapy_id
         })
 
-        return res.json(hours);
+        return res.json(therapist);
     }
 }
 

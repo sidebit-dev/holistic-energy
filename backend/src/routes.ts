@@ -21,6 +21,7 @@ import { FindHourIdController } from "./controllers/hour/FindHourIdController";
 import { DeleteHourController } from "./controllers/hour/DeleteHourController";
 import { AvailableHoursController } from "./controllers/hour/AvailableHoursController";
 import { TherapistForTherapyController } from "./controllers/therapy/TherapistForTherapyController";
+import { TherapyForTherapistController } from "./controllers/therapist/TherapyForTherapistController";
 
 
 
@@ -40,6 +41,7 @@ router.get('/therapy/therapist/:id', isAuthenticated, new TherapistForTherapyCon
 // -- Rotas Therapist --
 router.post('/therapist', isAuthenticated, new CreateTherapistController().handle)
 router.post('/therapist/add/therapy', isAuthenticated, new AttachTherapyController().handle)
+router.get('/therapist/therapy/:id', isAuthenticated, new TherapyForTherapistController().handle)
 
 // -- Rotas Admin --
 router.post('/admin', isAuthenticated, new CreateAdminController().handle)
