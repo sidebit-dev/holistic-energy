@@ -22,6 +22,7 @@ import { DeleteHourController } from "./controllers/hour/DeleteHourController";
 import { AvailableHoursController } from "./controllers/hour/AvailableHoursController";
 import { TherapistForTherapyController } from "./controllers/therapy/TherapistForTherapyController";
 import { TherapyForTherapistController } from "./controllers/therapist/TherapyForTherapistController";
+import { ListHoursScheduleController } from "./controllers/schedule/ListHoursScheduleController";
 
 
 
@@ -58,6 +59,8 @@ router.delete('/hour/:id', isAuthenticated, new DeleteHourController().handle)
 // -- Rotas Schedule --
 router.post('/schedule', isAuthenticated, new CreateScheduleController().handle)
 router.get('/schedule', isAuthenticated, new ListScheduleController().handle)
+router.get('/schedule/hours/:p1/:p2/:p3', isAuthenticated, new ListHoursScheduleController().handle)
 router.put('/schedule/up/:id', isAuthenticated, new UpdateScheduleController().handle)
+
 
 export { router }
