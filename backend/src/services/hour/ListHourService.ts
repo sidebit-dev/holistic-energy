@@ -7,6 +7,9 @@ class ListHourService {
         id: true,
         hour: true,
       },
+      orderBy:{
+        hour: 'asc'
+      }
     });
     return hours;
   }
