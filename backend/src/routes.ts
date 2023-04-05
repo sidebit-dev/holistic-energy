@@ -23,6 +23,7 @@ import { AvailableHoursController } from "./controllers/hour/AvailableHoursContr
 import { TherapistForTherapyController } from "./controllers/therapy/TherapistForTherapyController";
 import { TherapyForTherapistController } from "./controllers/therapist/TherapyForTherapistController";
 import { ListHoursScheduleController } from "./controllers/schedule/ListHoursScheduleController";
+import { ListSchedulesByClientsController } from "./controllers/schedule/ListSchedulesByClientsController";
 
 
 
@@ -60,6 +61,7 @@ router.delete('/hour/:id', isAuthenticated, new DeleteHourController().handle)
 router.post('/schedule', isAuthenticated, new CreateScheduleController().handle)
 router.get('/schedule', isAuthenticated, new ListScheduleController().handle)
 router.get('/schedule/hours/:p1/:p2/:p3', isAuthenticated, new ListHoursScheduleController().handle)
+router.get('/schedule/list/client/:id', isAuthenticated, new ListSchedulesByClientsController().handle)
 router.put('/schedule/up/:id', isAuthenticated, new UpdateScheduleController().handle)
 
 
