@@ -34,7 +34,7 @@ class ListScheduleByIdService {
         hour_id: true,
         user_id: true,
         therapy_id: true,
-        thepapist_id: true,        
+        thepapist_id: true,
         comment: true
         }
 

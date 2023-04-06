@@ -11,6 +11,9 @@ class ListScheduleService {
         hour_id: true,
         user_id: true,
         comment: true,       
+      },
+      orderBy:{
+        scheduleDate: 'desc'
       }
 
     });

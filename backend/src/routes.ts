@@ -26,6 +26,7 @@ import { ListHoursScheduleController } from "./controllers/schedule/ListHoursSch
 import { ListSchedulesByClientController } from "./controllers/schedule/ListSchedulesByClientController";
 import { ListSchedulesByTherapistController } from "./controllers/schedule/ListSchedulesByTherapistController";
 import { ListSchedulesByIdController } from "./controllers/schedule/ListSchedulesByIdController";
+import { DeleteSchedulesByIdController } from "./controllers/schedule/DeleteSchedulesByIdController";
 
 
 
@@ -67,5 +68,6 @@ router.get('/schedule/list/therapist/:id', isAuthenticated, new ListSchedulesByT
 router.get('/schedule/list/client/:id', isAuthenticated, new ListSchedulesByClientController().handle)
 router.get('/schedule/list/:id', isAuthenticated, new ListSchedulesByIdController().handle)
 router.put('/schedule/up/:id', isAuthenticated, new UpdateScheduleController().handle)
+router.delete('/schedule/del/:id', isAuthenticated, new DeleteSchedulesByIdController().handle)
 
 export { router }
