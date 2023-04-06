@@ -1,7 +1,7 @@
 import prismaClient from "../../prisma";
 
-interface ClientRequest {
-client_id: string;
+interface ScheduleRequest {
+id: string;
 dateNow?: string;
 }
 
@@ -13,8 +13,8 @@ function addDays(date, days){
   return date;
 }
 
-class ListScheduleByClientsService {
-  async execute({ client_id, dateNow  }: ClientRequest) {
+class ListScheduleByIdService {
+  async execute({ id, dateNow  }: ScheduleRequest) {
 
     const novaData =  addDays(data, dias)
 
@@ -22,31 +22,30 @@ class ListScheduleByClientsService {
 
     const dataAgenda = novaData.toISOString().slice(0,10)
 
-    console.log(dataAgenda)
-
+    //console.log(dataAgenda)
     //const dataAgenda = new Date(dateNow.replace("-", "/"));
 
-    const listClientSchedule = await prismaClient.schedule.findMany({
+    const listScheduleById = await prismaClient.schedule.findMany({
       where: {
-        user_id: client_id
+        id: id
       },
       select:{
-        therapy_id: true,
-        thepapist_id: true,
         scheduleDate: true,
         hour_id: true,
         user_id: true,
+        therapy_id: true,
+        thepapist_id: true,        
         comment: true
         }
 
     });
 
-    if (!listClientSchedule) {
-      throw new Error("O Cliente não tem Agendamento.");
+    if (!listScheduleById) {
+      throw new Error("Não exixte Agendamento.");
     } 
 
-    return {listClientSchedule};
+    return {listScheduleById};
   }
 }
 
-export { ListScheduleByClientsService };
+export { ListScheduleByIdService };
