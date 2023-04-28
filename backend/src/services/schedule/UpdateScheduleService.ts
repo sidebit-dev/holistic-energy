@@ -101,7 +101,7 @@ class UpdateScheduleService {
         },
         data: {
             therapy_id: therapy_id,
-            thepapist_id: therapist_id,
+            therapist_id: therapist_id,
             scheduleDate: dataAgenda,
             hour_id:  hour_id,
             user_id: user_id,

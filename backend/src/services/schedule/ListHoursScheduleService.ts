@@ -1,31 +1,94 @@
-import { parse } from "dotenv";
 import prismaClient from "../../prisma";
 
 interface HoursScheduletRequest {
   therapist_id: string;
-  therapy_id: string;
   dataSchedule: string;
+  days: number;
 }
 
 class ListHoursScheduleService {
   async execute({
     therapist_id,
-    therapy_id,
     dataSchedule,
+    days,
   }: HoursScheduletRequest) {
     const data = new Date(dataSchedule);
 
-    const hoursSchedule = await prismaClient.schedule.findMany({
+    const findRestrictionDate = await prismaClient.restrictionDate.findMany({
       where: {
-        therapy_id: therapy_id,
-        AND: {
-          thepapist_id: therapist_id,
-          AND: {
-            scheduleDate: data,
+        therapist_id: therapist_id,
+      },
+      select: {
+        id: true,
+        date: true,
+        restrictionHour: {
+          select: {
+            id: true,
+            hour: true,
           },
         },
       },
+    });
 
+    // CONSTRUINDO O ARRAY DE DATAS RESTRITIVAS DO TERAPEUTA
+    type Dates = {
+      id: string;
+      date: Date;
+    };
+
+    let dates: Dates[] = [];
+    for (let index = 0; index < findRestrictionDate.length; index++) {
+      const elementId = findRestrictionDate[index].id;
+      const elementDate = findRestrictionDate[index].date;
+      dates.push({ id: elementId, date: elementDate });
+    }
+
+    // PEGANDO AS DATAS EM QUE O TERAPEUTA COMPLETOU TODOS OS HORÁRIOS
+    
+
+    type ListDateMonth = {
+      id: string;
+      date: string;
+    };
+
+    let availableDates: ListDateMonth[] = [];
+
+    function addDays(date, days) {
+      date.setDate(date.getDate() + days);
+      return date;
+    }
+
+    function generationDates(days: number) {
+      for (let index = 0; index <= days; index++) {
+        const dataInicial = new Date();
+        const novaData = addDays(dataInicial, index);
+        const elementId = index.toString();
+        const elementDate = novaData.toISOString().slice(0, 10);
+        availableDates.push({ id: elementId, date: elementDate });
+      }
+
+      return { availableDates };
+    }
+
+    const dias = days < 1 ? (days = 1) : days >= 60 ? (days = 60) : days;
+
+    const periodo = generationDates(dias);
+
+    const dateAvailable = availableDates.filter((date) => {
+      for (let index = 0; index < dates.length; index++) {
+        if (date.date === dates[index].date.toISOString().slice(0, 10) || (new Date(date.date).getDay()) === 6 || (new Date(date.date).getDay()) === 5)
+          return false;
+      }
+      return true;
+    });
+
+    const hoursSchedule = await prismaClient.schedule.findMany({
+      where: {
+        therapist_id: therapist_id,
+        AND: {
+          scheduleDate: data,          
+        },
+      },
       orderBy: {
         hour: {
           hour: "asc",
@@ -62,7 +125,7 @@ class ListHoursScheduleService {
     type Hours = {
       id: string;
       hour: string;
-    }
+    };
 
     let hours: Hours[] = [];
     for (let index = 0; index < hoursSchedule.length; index++) {
@@ -78,20 +141,23 @@ class ListHoursScheduleService {
         hour: true,
       },
       orderBy: {
-        hour: 'asc'
-      }
+        hour: "asc",
+      },
     });
 
-    const hoursAvailable = listHours.filter(hour => {
-      for (let index = 0; index < hours.length; index++) {
-        if (hour.id === hours[index].id)
-        return false
-      }
-      return true
-    })
+    if (listHours.length === 0) {
+      throw new Error("Não existe Horas cadastradas.");
+    }
 
-    return {hoursAvailable};
-    // return [hoursSchedule, hours];
+    const hoursAvailable = listHours.filter((hour) => {
+      for (let index = 0; index < hours.length; index++) {
+        if (hour.id === hours[index].id) 
+        return false;
+      }
+      return true;
+    });
+
+    return { hoursAvailable, findRestrictionDate, dateAvailable };
   }
 }
 

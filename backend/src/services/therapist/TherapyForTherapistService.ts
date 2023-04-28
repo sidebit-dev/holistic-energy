@@ -20,6 +20,10 @@ class TherapyForTherapistService {
         }
     });
 
+    if (therapy.length === 0){
+        throw new Error("Terapeuta não tem cadastro de Terapia")
+      }
+
     return therapy;
   }
 }

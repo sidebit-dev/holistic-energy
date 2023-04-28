@@ -13,7 +13,6 @@ import { CreateAdminController } from "./controllers/admin/CreateAdminController
 import { AttachTherapyController } from "./controllers/therapist/AttachTherapyController";
 import { CreateScheduleController } from "./controllers/schedule/CreateScheduleController";
 import { CreateHourController } from "./controllers/hour/CreateHourController";
-import { ListHourController } from "./controllers/hour/ListHourController";
 import { ListScheduleController } from "./controllers/schedule/ListScheduleController";
 import { UpdateHourController } from "./controllers/hour/UpdateHourController";
 import { UpdateScheduleController } from "./controllers/schedule/UpdateScheduleController";
@@ -27,15 +26,15 @@ import { ListSchedulesByClientController } from "./controllers/schedule/ListSche
 import { ListSchedulesByTherapistController } from "./controllers/schedule/ListSchedulesByTherapistController";
 import { ListSchedulesByIdController } from "./controllers/schedule/ListSchedulesByIdController";
 import { DeleteSchedulesByIdController } from "./controllers/schedule/DeleteSchedulesByIdController";
-
-
+import { CreateRestrictionDateController } from "./controllers/schedule/CreateRestrictionDateController";
+import { ListRestrictionDateController } from "./controllers/schedule/ListRestrictionDateController";
+import { UpdateRestrictionDateController } from "./controllers/schedule/UpdateRestrictionDateController";
 
 const router = Router()
 
 // -- Rotas USER --
 router.post('/users', new CreateUserController().handle)
 router.post('/session', new AuthUserController().handle)
-// router.get('/me', new DetailUserController().handle)
 router.get('/me', isAuthenticated, new DetailUserController().handle)
 
 // -- Rotas Therapy --
@@ -52,8 +51,7 @@ router.get('/therapist/therapy/:id', isAuthenticated, new TherapyForTherapistCon
 router.post('/admin', isAuthenticated, new CreateAdminController().handle)
 
 // --Rotas Hour --
-router.post('/add/hour', isAuthenticated, new CreateHourController().handle)
-router.get('/hour', isAuthenticated, new ListHourController().handle)
+router.post('/hour/add', isAuthenticated, new CreateHourController().handle)
 router.get('/hour/available', isAuthenticated , new AvailableHoursController().handle)
 router.put('/hour/up/:id', isAuthenticated, new UpdateHourController().handle)
 router.get('/hour/:id', isAuthenticated, new FindHourIdController().handle)
@@ -63,11 +61,16 @@ router.delete('/hour/:id', isAuthenticated, new DeleteHourController().handle)
 // -- Rotas Schedule --
 router.post('/schedule', isAuthenticated, new CreateScheduleController().handle)
 router.get('/schedule', isAuthenticated, new ListScheduleController().handle)
-router.get('/schedule/hours/:p1/:p2/:p3', isAuthenticated, new ListHoursScheduleController().handle)
+router.get('/schedule/hours/:p1/:p2', isAuthenticated, new ListHoursScheduleController().handle)
 router.get('/schedule/list/therapist/:id', isAuthenticated, new ListSchedulesByTherapistController().handle)
 router.get('/schedule/list/client/:id', isAuthenticated, new ListSchedulesByClientController().handle)
 router.get('/schedule/list/:id', isAuthenticated, new ListSchedulesByIdController().handle)
 router.put('/schedule/up/:id', isAuthenticated, new UpdateScheduleController().handle)
 router.delete('/schedule/del/:id', isAuthenticated, new DeleteSchedulesByIdController().handle)
+
+// Restrictions Schedules
+router.post('/schedule/add/restriction/:id', isAuthenticated, new CreateRestrictionDateController().handle)
+router.get('/schedule/list/restriction/:id', isAuthenticated, new ListRestrictionDateController().handle)
+router.put('/schedule/up/restriction/:p1', isAuthenticated, new UpdateRestrictionDateController().handle)
 
 export { router }

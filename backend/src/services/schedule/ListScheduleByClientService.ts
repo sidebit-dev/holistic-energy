@@ -30,17 +30,33 @@ class ListScheduleByClientService {
         user_id: id
       },
       select:{
-        therapy_id: true,
-        thepapist_id: true,
+        therapy:{
+          select:{
+            name: true,
+          }
+        },
+        therapist:{
+          select:{
+            user:{
+              select:{
+                name: true,
+              }
+            }
+          }
+        },
         scheduleDate: true,
-        hour_id: true,
+        hour:{
+          select:{
+            hour: true,
+          }
+        },
         comment: true
         }
 
     });
 
-    if (!listClientSchedule) {
-      throw new Error("O Cliente não tem Agendamento.");
+     if (listClientSchedule.length === 0) {
+      throw new Error("Não existe Agendamento para o Cliente.");
     } 
 
     return {listClientSchedule};

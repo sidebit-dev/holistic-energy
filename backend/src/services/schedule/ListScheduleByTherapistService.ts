@@ -1,49 +1,77 @@
 import prismaClient from "../../prisma";
 
 interface TherapistRequest {
-id: string;
-dateNow?: string;
+  id: string;
+  date_ini?: string;
+  date_fin?: string;
 }
 
-const data = new Date()
-const dias = 30
 
-function addDays(date, days){
-  date.setDate(date.getDate() + days);
+const dias = 30;
+
+function addDays(date, days) {
+  date.setUTCDate(date.getUTCDate() + days);
   return date;
 }
 
+function convertDate(dateX: Date) {
+  const data = new Date(
+    dateX.getUTCFullYear(),
+    dateX.getUTCMonth(),
+    dateX.getUTCDate()
+  );
+  return data;
+}
+
 class ListScheduleByTherapistService {
-  async execute({ id, dateNow  }: TherapistRequest) {
+  async execute({ id, date_ini, date_fin }: TherapistRequest) {
+    let dataInicial;
+    let dataFinal;
 
-    const novaData =  addDays(data, dias)
+    if (!date_ini) {
+      const now = new Date();
+      dataInicial = convertDate(now);
+    } else {
+      dataInicial = convertDate(new Date(date_ini));
+    }
 
-    const dataAgenda = novaData.toISOString().slice(0,10)
+    if (!date_fin) {
+      const now = new Date();
+      dataFinal = convertDate(addDays(now, dias));
+    } else {
+      dataFinal = convertDate(new Date(date_fin));
+    }
 
-    // console.log(dataAgenda)
-    // console.log(id)
-
-    //const dataAgenda = new Date(dateNow.replace("-", "/"));
+    console.log(dataInicial.toString()+ " " + dias.toString());
+    console.log(dataFinal.toString()+ " " + dias.toString());
 
     const listTherapistSchedule = await prismaClient.schedule.findMany({
       where: {
-        thepapist_id: id,
+        scheduleDate: {
+          gte: dataInicial,
+          lte: dataFinal,
+        },
+        therapist_id: id,
       },
-      select:{
+      select: {
         user_id: true,
         therapy_id: true,
         scheduleDate: true,
-        hour_id: true,
+        hour: {
+          select: {
+            id: true,
+            hour: true,
+          },
+        },
         comment: true,
-        }
-
+      },
     });
 
-    if (!listTherapistSchedule) {
-      throw new Error("O Terapeuta não tem Agendamento.");
-    } 
-
-    return {listTherapistSchedule};
+    if (listTherapistSchedule.length === 0) {
+      return { message: "O Terapeuta não tem agendamento" };
+    } else {
+      return { listTherapistSchedule };
+    }
   }
 }
 

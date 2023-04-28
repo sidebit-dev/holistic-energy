@@ -1,50 +1,56 @@
 import prismaClient from "../../prisma";
 
 interface ScheduleRequest {
-id: string;
-dateNow?: string;
-}
-
-const data = new Date()
-const dias = 30
-
-function addDays(date, days){
-  date.setDate(date.getDate() + days);
-  return date;
+  id: string;
 }
 
 class ListScheduleByIdService {
-  async execute({ id, dateNow  }: ScheduleRequest) {
-
-    const novaData =  addDays(data, dias)
-
-    //console.log(novaData.toISOString().slice(0,10));
-
-    const dataAgenda = novaData.toISOString().slice(0,10)
-
-    //console.log(dataAgenda)
-    //const dataAgenda = new Date(dateNow.replace("-", "/"));
-
+  async execute({ id }: ScheduleRequest) {
     const listScheduleById = await prismaClient.schedule.findMany({
       where: {
-        id: id
+        id: id,
       },
-      select:{
+      select: {
         scheduleDate: true,
-        hour_id: true,
-        user_id: true,
-        therapy_id: true,
-        thepapist_id: true,
-        comment: true
-        }
-
+        hour:{
+          select:{
+            id: true,
+            hour: true,
+          }
+        },
+        user: {
+          select:{
+            id: true,
+            name: true,
+            email: true,
+          }
+        },
+        therapy:{
+          select:{
+            id: true,
+            name: true,
+          }
+        },
+        therapist:{
+          select:{
+            user:{
+              select:{
+                id: true,
+                name: true,
+                email: true,
+              }
+            }
+          }
+        },
+        comment: true,
+      },
     });
 
-    if (!listScheduleById) {
-      throw new Error("Não exixte Agendamento.");
-    } 
+    if (listScheduleById.length === 0) {
+      throw new Error("Não existe Agendamento para o Cliente.");
+    }
 
-    return {listScheduleById};
+    return { listScheduleById };
   }
 }
 
