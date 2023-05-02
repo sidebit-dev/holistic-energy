@@ -10,8 +10,6 @@ class ListHoursScheduleController {
     const dataSchedule = p2
     const {days} = req.body
 
-    //  console.log( `O parâmetro é: ${ days }` )
-
     const listHoursScheduleService = new ListHoursScheduleService();
 
     const hoursSchedule = await listHoursScheduleService.execute({

@@ -7,11 +7,7 @@ interface HoursScheduletRequest {
 }
 
 class ListHoursScheduleService {
-  async execute({
-    therapist_id,
-    dataSchedule,
-    days,
-  }: HoursScheduletRequest) {
+  async execute({ therapist_id, dataSchedule, days }: HoursScheduletRequest) {
     const data = new Date(dataSchedule);
 
     const findRestrictionDate = await prismaClient.restrictionDate.findMany({
@@ -44,7 +40,6 @@ class ListHoursScheduleService {
     }
 
     // PEGANDO AS DATAS EM QUE O TERAPEUTA COMPLETOU TODOS OS HORÁRIOS
-    
 
     type ListDateMonth = {
       id: string;
@@ -76,7 +71,11 @@ class ListHoursScheduleService {
 
     const dateAvailable = availableDates.filter((date) => {
       for (let index = 0; index < dates.length; index++) {
-        if (date.date === dates[index].date.toISOString().slice(0, 10) || (new Date(date.date).getDay()) === 6 || (new Date(date.date).getDay()) === 5)
+        if (
+          date.date === dates[index].date.toISOString().slice(0, 10) ||
+          new Date(date.date).getDay() === 6 ||
+          new Date(date.date).getDay() === 5
+        )
           return false;
       }
       return true;
@@ -86,7 +85,7 @@ class ListHoursScheduleService {
       where: {
         therapist_id: therapist_id,
         AND: {
-          scheduleDate: data,          
+          scheduleDate: data,
         },
       },
       orderBy: {
@@ -151,8 +150,7 @@ class ListHoursScheduleService {
 
     const hoursAvailable = listHours.filter((hour) => {
       for (let index = 0; index < hours.length; index++) {
-        if (hour.id === hours[index].id) 
-        return false;
+        if (hour.id === hours[index].id) return false;
       }
       return true;
     });

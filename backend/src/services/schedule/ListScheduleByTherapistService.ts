@@ -42,9 +42,6 @@ class ListScheduleByTherapistService {
       dataFinal = convertDate(new Date(date_fin));
     }
 
-    console.log(dataInicial.toString()+ " " + dias.toString());
-    console.log(dataFinal.toString()+ " " + dias.toString());
-
     const listTherapistSchedule = await prismaClient.schedule.findMany({
       where: {
         scheduleDate: {
